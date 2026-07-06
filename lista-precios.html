@@ -530,18 +530,23 @@ function exportPDF() {
 <title>Lista de Precios ${esc(month)} — Focus Media</title>
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
-@page { size: A4; margin: 0; }
-html { background:#000; min-height:297mm; }
+@page { size: 200mm 250mm; margin: 0; }
+html { background:#1a1a1a; }
 body {
-  background:#000;
+  background:#1a1a1a;
   font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  display:flex; flex-direction:column; min-height:297mm;
+  display:flex; justify-content:center; align-items:flex-start; padding:20px 0;
 }
-.page-body { display:flex; flex-direction:column; min-height:297mm; }
-.content-area { flex:1; }
+.page-body {
+  display:flex; flex-direction:column;
+  width:200mm; height:250mm;
+  background:#000;
+  overflow:hidden;
+}
+.content-area { flex:1; overflow:hidden; }
 @media print {
-  html, body { background:#000 !important; min-height:297mm; -webkit-print-color-adjust:exact; print-color-adjust:exact; color-adjust:exact; }
-  .page-body { min-height:297mm; background:#000 !important; }
+  html, body { background:#000 !important; padding:0; -webkit-print-color-adjust:exact; print-color-adjust:exact; color-adjust:exact; }
+  .page-body { width:200mm; height:250mm; background:#000 !important; }
   .no-print { display:none !important; }
 }
 </style>
@@ -556,7 +561,7 @@ body {
 <div class="page-body">
 
   <!-- HEADER -->
-  <div style="background:#000;padding:20px 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a1a;">
+  <div style="background:#000;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a1a;">
     <img src="${logo}" height="60" alt="Focus Media">
     <div style="text-align:right;">
       <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#666;margin-bottom:4px;">Lista de Precios</div>
@@ -567,7 +572,7 @@ body {
   <div style="height:4px;background:linear-gradient(90deg,#8B6914,#C9A94B,#E8D08A,#C9A94B,#8B6914);"></div>
 
   <!-- MAIN CONTENT (flex:1 fills remaining space) -->
-  <div class="content-area" style="padding:20px 40px 16px;">
+  <div class="content-area" style="padding:14px 28px 12px;">
     <div style="display:flex;gap:24px;flex-wrap:wrap;">
 
       <div style="flex:1;min-width:240px;background:#111;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden;">
@@ -596,7 +601,7 @@ body {
   </div>
 
   <!-- FOOTER -->
-  <div style="background:#000;border-top:1px solid #1a1a1a;padding:10px 40px;display:flex;align-items:center;justify-content:center;">
+  <div style="background:#000;border-top:1px solid #1a1a1a;padding:8px 28px;display:flex;align-items:center;justify-content:center;">
     <img src="${logo}" height="24" alt="Focus Media" style="opacity:.4;">
   </div>
 
