@@ -83,7 +83,7 @@ textarea { resize: vertical; min-height: 80px; }
 /* PRICE INPUT */
 .price-wrap { position: relative; }
 .price-wrap::before { content: '₡'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 13px; pointer-events: none; }
-.price-wrap input { padding-left: 24px; }
+.price-wrap input { padding-left: 30px; }
 
 /* MODAL */
 .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.88); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
@@ -530,7 +530,7 @@ function exportPDF() {
 <title>Lista de Precios ${esc(month)} — Focus Media</title>
 <style>
 * { box-sizing:border-box; margin:0; padding:0; }
-@page { size: 200mm 250mm; margin: 0; }
+@page { size: 216mm 279mm; margin: 0; }
 html { background:#1a1a1a; }
 body {
   background:#1a1a1a;
@@ -539,14 +539,14 @@ body {
 }
 .page-body {
   display:flex; flex-direction:column;
-  width:200mm; height:250mm;
+  width:216mm; height:279mm;
   background:#000;
   overflow:hidden;
 }
 .content-area { flex:1; overflow:hidden; }
 @media print {
   html, body { background:#000 !important; padding:0; -webkit-print-color-adjust:exact; print-color-adjust:exact; color-adjust:exact; }
-  .page-body { width:200mm; height:250mm; background:#000 !important; }
+  .page-body { width:216mm; height:279mm; background:#000 !important; }
   .no-print { display:none !important; }
 }
 </style>
@@ -571,12 +571,12 @@ body {
   </div>
   <div style="height:4px;background:linear-gradient(90deg,#8B6914,#C9A94B,#E8D08A,#C9A94B,#8B6914);"></div>
 
-  <!-- MAIN CONTENT (flex:1 fills remaining space) -->
-  <div class="content-area" style="padding:14px 28px 12px;">
-    <div style="display:flex;gap:24px;flex-wrap:wrap;">
+  <!-- MAIN CONTENT -->
+  <div class="content-area" style="padding:14px 28px 0;">
+    <div style="display:flex;flex-direction:column;gap:14px;">
 
-      <div style="flex:1;min-width:240px;background:#111;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden;">
-        <div style="padding:13px 16px;border-bottom:1px solid #1e1e1e;background:#0d0d0d;display:flex;align-items:center;gap:9px;">
+      <div style="background:#111;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden;">
+        <div style="padding:11px 16px;border-bottom:1px solid #1e1e1e;background:#0d0d0d;display:flex;align-items:center;gap:9px;">
           <span style="font-size:16px;">🎬</span>
           <span style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#C9A94B;font-weight:700;">Videos</span>
         </div>
@@ -585,8 +585,8 @@ body {
         </table>
       </div>
 
-      <div style="flex:1;min-width:240px;background:#111;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden;">
-        <div style="padding:13px 16px;border-bottom:1px solid #1e1e1e;background:#0d0d0d;display:flex;align-items:center;gap:9px;">
+      <div style="background:#111;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden;">
+        <div style="padding:11px 16px;border-bottom:1px solid #1e1e1e;background:#0d0d0d;display:flex;align-items:center;gap:9px;">
           <span style="font-size:16px;">📷</span>
           <span style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#C9A94B;font-weight:700;">Fotografía</span>
         </div>
@@ -596,13 +596,12 @@ body {
       </div>
 
     </div>
-
-    ${footerNote}
   </div>
 
   <!-- FOOTER -->
-  <div style="background:#000;border-top:1px solid #1a1a1a;padding:8px 28px;display:flex;align-items:center;justify-content:center;">
-    <img src="${logo}" height="24" alt="Focus Media" style="opacity:.4;">
+  <div style="background:#000;border-top:1px solid #1a1a1a;padding:12px 28px;margin-top:auto;display:flex;align-items:center;justify-content:space-between;">
+    <img src="${logo}" height="22" alt="Focus Media" style="opacity:.4;">
+    ${cfg.policiesUrl ? `<a href="${esc(cfg.policiesUrl)}" target="_blank" style="color:#555;font-size:11px;text-decoration:none;">📄 Políticas y condiciones de trabajo</a>` : '<span></span>'}
   </div>
 
 </div><!-- end page-body -->
