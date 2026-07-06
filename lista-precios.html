@@ -501,21 +501,21 @@ async function exportPDF() {
 
   const fotosRows = fotos.map(f => `
     <tr style="border-bottom:1px solid #1a1a1a;">
-      <td style="padding:8px 16px; color:#e8e8e8; font-size:14px;">${esc(f.label)}</td>
-      <td style="padding:8px 16px; text-align:right; white-space:nowrap;">
-        <span style="color:#C9A94B; font-size:16px; font-weight:700;">₡${esc(f.price)}</span>
-        ${f.perUnit ? '<span style="color:#777; font-size:11px; margin-left:4px; letter-spacing:1px;">C/U</span>' : ''}
+      <td style="padding:14px 20px; color:#e8e8e8; font-size:19px;">${esc(f.label)}</td>
+      <td style="padding:14px 20px; text-align:right; white-space:nowrap;">
+        <span style="color:#C9A94B; font-size:22px; font-weight:700;">₡${esc(f.price)}</span>
+        ${f.perUnit ? '<span style="color:#777; font-size:13px; margin-left:6px; letter-spacing:1px;">C/U</span>' : ''}
       </td>
     </tr>`).join('');
 
   const videoRows = videos.map(v => `
     <tr style="border-bottom:1px solid #1a1a1a;">
-      <td style="padding:8px 16px;">
-        <div style="color:#e8e8e8; font-size:14px; font-weight:600;">${esc(v.name)}</div>
-        ${v.subtitle ? `<div style="color:#777; font-size:12px; margin-top:2px;">${esc(v.subtitle)}</div>` : ''}
+      <td style="padding:14px 20px;">
+        <div style="color:#e8e8e8; font-size:19px; font-weight:600;">${esc(v.name)}</div>
+        ${v.subtitle ? `<div style="color:#777; font-size:14px; margin-top:3px;">${esc(v.subtitle)}</div>` : ''}
       </td>
-      <td style="padding:8px 16px; text-align:right; white-space:nowrap;">
-        <span style="color:#C9A94B; font-size:16px; font-weight:700;">₡${esc(v.price)}</span>
+      <td style="padding:14px 20px; text-align:right; white-space:nowrap;">
+        <span style="color:#C9A94B; font-size:22px; font-weight:700;">₡${esc(v.price)}</span>
       </td>
     </tr>`).join('');
 
@@ -528,48 +528,48 @@ async function exportPDF() {
   wrap.style.cssText = 'position:fixed;left:-9999px;top:0;width:816px;height:1056px;overflow:hidden;background:#000;display:flex;flex-direction:column;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-sizing:border-box;';
   wrap.innerHTML = `
   <!-- HEADER -->
-  <div style="background:#000;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a1a;flex-shrink:0;">
-    <img src="${logo}" height="60" alt="Focus Media">
+  <div style="background:#000;padding:20px 32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a1a;flex-shrink:0;">
+    <img src="${logo}" height="72" alt="Focus Media">
     <div style="text-align:right;">
-      <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#666;margin-bottom:4px;">Lista de Precios</div>
-      <div style="font-size:28px;font-weight:700;color:#C9A94B;">${esc(month)}</div>
-      ${cfg.contact ? `<div style="color:#C9A94B;font-size:13px;font-weight:600;margin-top:6px;">${esc(cfg.contact)}</div>` : ''}
+      <div style="font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#666;margin-bottom:6px;">Lista de Precios</div>
+      <div style="font-size:40px;font-weight:700;color:#C9A94B;">${esc(month)}</div>
+      ${cfg.contact ? `<div style="color:#C9A94B;font-size:16px;font-weight:600;margin-top:8px;">${esc(cfg.contact)}</div>` : ''}
     </div>
   </div>
   <div style="height:4px;background:linear-gradient(90deg,#8B6914,#C9A94B,#E8D08A,#C9A94B,#8B6914);flex-shrink:0;"></div>
 
   <!-- CONTENT -->
-  <div style="flex:1;overflow:hidden;padding:18px 28px 0;">
-    <div style="display:flex;flex-direction:column;gap:16px;">
+  <div style="flex:1;overflow:hidden;padding:22px 32px 0;">
+    <div style="display:flex;flex-direction:column;gap:22px;">
 
-      <div style="background:#111;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden;">
-        <div style="padding:11px 16px;border-bottom:1px solid #1e1e1e;background:#0d0d0d;display:flex;align-items:center;gap:9px;">
-          <span style="font-size:16px;">🎬</span>
-          <span style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#C9A94B;font-weight:700;">Videos</span>
+      <div style="background:#111;border:1px solid #1e1e1e;border-radius:14px;overflow:hidden;">
+        <div style="padding:14px 20px;border-bottom:1px solid #1e1e1e;background:#0d0d0d;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">🎬</span>
+          <span style="font-size:13px;letter-spacing:2.5px;text-transform:uppercase;color:#C9A94B;font-weight:700;">Videos</span>
         </div>
         <table style="width:100%;border-collapse:collapse;">
-          ${videoRows || '<tr><td colspan="2" style="padding:16px;color:#555;font-size:13px;text-align:center;">Sin datos</td></tr>'}
+          ${videoRows || '<tr><td colspan="2" style="padding:20px;color:#555;font-size:16px;text-align:center;">Sin datos</td></tr>'}
         </table>
       </div>
 
-      <div style="background:#111;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden;">
-        <div style="padding:11px 16px;border-bottom:1px solid #1e1e1e;background:#0d0d0d;display:flex;align-items:center;gap:9px;">
-          <span style="font-size:16px;">📷</span>
-          <span style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#C9A94B;font-weight:700;">Fotografía</span>
+      <div style="background:#111;border:1px solid #1e1e1e;border-radius:14px;overflow:hidden;">
+        <div style="padding:14px 20px;border-bottom:1px solid #1e1e1e;background:#0d0d0d;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">📷</span>
+          <span style="font-size:13px;letter-spacing:2.5px;text-transform:uppercase;color:#C9A94B;font-weight:700;">Fotografía</span>
         </div>
         <table style="width:100%;border-collapse:collapse;">
-          ${fotosRows || '<tr><td colspan="2" style="padding:16px;color:#555;font-size:13px;text-align:center;">Sin datos</td></tr>'}
+          ${fotosRows || '<tr><td colspan="2" style="padding:20px;color:#555;font-size:16px;text-align:center;">Sin datos</td></tr>'}
         </table>
       </div>
 
       ${nota ? `
-      <div style="background:#111;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden;">
-        <div style="padding:11px 16px;border-bottom:1px solid #1e1e1e;background:#0d0d0d;display:flex;align-items:center;gap:9px;">
-          <span style="font-size:16px;">📝</span>
-          <span style="font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:#C9A94B;font-weight:700;">Notas</span>
+      <div style="background:#111;border:1px solid #1e1e1e;border-radius:14px;overflow:hidden;">
+        <div style="padding:14px 20px;border-bottom:1px solid #1e1e1e;background:#0d0d0d;display:flex;align-items:center;gap:10px;">
+          <span style="font-size:20px;">📝</span>
+          <span style="font-size:13px;letter-spacing:2.5px;text-transform:uppercase;color:#C9A94B;font-weight:700;">Notas</span>
         </div>
-        <div style="padding:12px 16px;">
-          <p style="color:#aaa;font-size:13px;line-height:1.7;">${esc(nota)}</p>
+        <div style="padding:16px 20px;">
+          <p style="color:#aaa;font-size:16px;line-height:1.7;">${esc(nota)}</p>
         </div>
       </div>` : ''}
 
@@ -612,7 +612,7 @@ async function exportPDF() {
     const canvas = await html2canvas(wrap, { scale:2, useCORS:true, backgroundColor:'#000', logging:false });
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'letter' });
-    pdf.addImage(canvas.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, 216, 279);
+    pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', -0.5, -0.5, 217, 280);
     if (policyLinkMm) {
       pdf.link(policyLinkMm.x, policyLinkMm.y, policyLinkMm.w, policyLinkMm.h, { url: cfg.policiesUrl });
     }
