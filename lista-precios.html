@@ -121,6 +121,8 @@ textarea { resize: vertical; min-height: 80px; }
   .modal { padding: 22px 18px; }
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -146,7 +148,7 @@ textarea { resize: vertical; min-height: 80px; }
 <div class="screen" id="screen-editor">
   <div class="editor-toolbar">
     <button class="back-btn" onclick="goHistorial()">← Volver</button>
-    <button class="btn btn-outline btn-sm" onclick="exportPDF()">↗ PDF</button>
+    <button id="btn-export-pdf" class="btn btn-outline btn-sm" onclick="exportPDF()">⬇ Descargar PDF</button>
   </div>
 
   <div class="form-group">
@@ -487,9 +489,9 @@ function saveConfig() {
 }
 
 // ═══════════════════════════════════════════
-//  PDF EXPORT
+//  PDF EXPORT — descarga directa
 // ═══════════════════════════════════════════
-function exportPDF() {
+async function exportPDF() {
   const cfg    = loadConfig() || {};
   const month  = document.getElementById('ed-month').value || 'Sin mes';
   const nota   = document.getElementById('ed-nota').value;
@@ -517,63 +519,28 @@ function exportPDF() {
       </td>
     </tr>`).join('');
 
-  const footerNote = nota || cfg.policiesUrl ? `
-    <div style="margin:0 36px 16px; padding:14px 20px; background:#0d0d0d; border:1px solid #1e1e1e; border-radius:10px;">
-      ${nota ? `<p style="color:#aaa; font-size:13px; line-height:1.7; margin-bottom:${cfg.policiesUrl ? '10px' : '0'};">${esc(nota)}</p>` : ''}
-      ${cfg.policiesUrl ? `<p style="font-size:12px; color:#777;">📄 <a href="${esc(cfg.policiesUrl)}" target="_blank" style="color:#C9A94B;text-decoration:underline;">Políticas y condiciones de trabajo</a></p>` : ''}
-    </div>` : '';
+  // Botón de estado
+  const btn = document.getElementById('btn-export-pdf');
+  if (btn) { btn.textContent = '⏳ Generando...'; btn.disabled = true; }
 
-  const html = `<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>Lista de Precios ${esc(month)} — Focus Media</title>
-<style>
-* { box-sizing:border-box; margin:0; padding:0; }
-@page { size: 216mm 279mm; margin: 0; }
-html { background:#1a1a1a; }
-body {
-  background:#1a1a1a;
-  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
-  display:flex; justify-content:center; align-items:flex-start; padding:20px 0;
-}
-.page-body {
-  display:flex; flex-direction:column;
-  width:216mm; height:279mm;
-  background:#000;
-  overflow:hidden;
-}
-.content-area { flex:1; overflow:hidden; }
-@media print {
-  html, body { background:#000 !important; padding:0; -webkit-print-color-adjust:exact; print-color-adjust:exact; color-adjust:exact; }
-  .page-body { width:216mm; height:279mm; background:#000 !important; }
-  .no-print { display:none !important; }
-}
-</style>
-</head>
-<body>
-
-<div class="no-print" style="background:#1a1a1a;color:#888;font-size:13px;padding:12px 24px;text-align:center;display:flex;align-items:center;justify-content:center;gap:16px;">
-  Archivo → Imprimir → Guardar como PDF
-  <button onclick="window.print()" style="background:linear-gradient(135deg,#8B6914,#C9A94B,#E8D08A);border:none;color:#000;padding:7px 18px;border-radius:5px;cursor:pointer;font-weight:700;font-size:12px;letter-spacing:.5px;">🖨 Imprimir</button>
-</div>
-
-<div class="page-body">
-
+  // Contenedor oculto tamaño carta (816×1056px = 8.5×11in a 96dpi)
+  const wrap = document.createElement('div');
+  wrap.style.cssText = 'position:fixed;left:-9999px;top:0;width:816px;height:1056px;overflow:hidden;background:#000;display:flex;flex-direction:column;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;box-sizing:border-box;';
+  wrap.innerHTML = `
   <!-- HEADER -->
-  <div style="background:#000;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a1a;">
+  <div style="background:#000;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1a1a1a;flex-shrink:0;">
     <img src="${logo}" height="60" alt="Focus Media">
     <div style="text-align:right;">
       <div style="font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#666;margin-bottom:4px;">Lista de Precios</div>
-      <div style="font-size:28px;font-weight:700;line-height:1.3;padding-bottom:3px;background:linear-gradient(135deg,#8B6914,#C9A94B,#E8D08A,#C9A94B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">${esc(month)}</div>
-      ${cfg.contact ? `<div style="color:#C9A94B;font-size:13px;font-weight:600;margin-top:6px;letter-spacing:.5px;">${esc(cfg.contact)}</div>` : ''}
+      <div style="font-size:28px;font-weight:700;color:#C9A94B;">${esc(month)}</div>
+      ${cfg.contact ? `<div style="color:#C9A94B;font-size:13px;font-weight:600;margin-top:6px;">${esc(cfg.contact)}</div>` : ''}
     </div>
   </div>
-  <div style="height:4px;background:linear-gradient(90deg,#8B6914,#C9A94B,#E8D08A,#C9A94B,#8B6914);"></div>
+  <div style="height:4px;background:linear-gradient(90deg,#8B6914,#C9A94B,#E8D08A,#C9A94B,#8B6914);flex-shrink:0;"></div>
 
-  <!-- MAIN CONTENT -->
-  <div class="content-area" style="padding:14px 28px 0;">
-    <div style="display:flex;flex-direction:column;gap:14px;">
+  <!-- CONTENT -->
+  <div style="flex:1;overflow:hidden;padding:18px 28px 0;">
+    <div style="display:flex;flex-direction:column;gap:16px;">
 
       <div style="background:#111;border:1px solid #1e1e1e;border-radius:12px;overflow:hidden;">
         <div style="padding:11px 16px;border-bottom:1px solid #1e1e1e;background:#0d0d0d;display:flex;align-items:center;gap:9px;">
@@ -598,19 +565,28 @@ body {
     </div>
   </div>
 
+  ${nota ? `<div style="padding:12px 20px;margin:0 28px 12px;background:#0d0d0d;border:1px solid #1e1e1e;border-radius:10px;flex-shrink:0;"><p style="color:#aaa;font-size:12px;line-height:1.6;">${esc(nota)}</p></div>` : ''}
+
   <!-- FOOTER -->
-  <div style="background:#000;border-top:1px solid #1a1a1a;padding:12px 28px;margin-top:auto;display:flex;align-items:center;justify-content:space-between;">
+  <div style="background:#000;border-top:1px solid #1a1a1a;padding:12px 28px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;margin-top:auto;">
     <img src="${logo}" height="22" alt="Focus Media" style="opacity:.4;">
-    ${cfg.policiesUrl ? `<a href="${esc(cfg.policiesUrl)}" target="_blank" style="color:#555;font-size:11px;text-decoration:none;">📄 Políticas y condiciones de trabajo</a>` : '<span></span>'}
-  </div>
+    ${cfg.policiesUrl ? `<span style="color:#555;font-size:11px;">📄 Políticas y condiciones de trabajo</span>` : '<span></span>'}
+  </div>`;
 
-</div><!-- end page-body -->
-</body></html>`;
+  document.body.appendChild(wrap);
 
-  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  const url  = URL.createObjectURL(blob);
-  const w    = window.open(url, '_blank');
-  if (!w)    { alert('Permite ventanas emergentes para exportar el PDF.'); }
+  try {
+    const canvas = await html2canvas(wrap, { scale:2, useCORS:true, backgroundColor:'#000', logging:false });
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation:'portrait', unit:'mm', format:'letter' });
+    pdf.addImage(canvas.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, 216, 279);
+    pdf.save(`Lista de Precios ${month} — Focus Media.pdf`);
+  } catch(e) {
+    alert('Error al generar PDF: ' + e.message);
+  } finally {
+    document.body.removeChild(wrap);
+    if (btn) { btn.textContent = '⬇ Descargar PDF'; btn.disabled = false; }
+  }
 }
 
 // ═══════════════════════════════════════════
